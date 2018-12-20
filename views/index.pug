@@ -1,0 +1,35 @@
+extends layout
+
+block content
+    #info
+      label Name
+      input#name_person(type='text')
+      input#register(type='button' value='register')
+    .container
+      .row
+        .col-8#main_page
+          #content
+          #controls
+            input#text_message(type='text')
+            input#btn_send(type='button', value='Send')
+        .col-4
+          #info
+            label Current User
+            #current_user
+      .row
+        .col-4
+          #content2
+          #controls
+            input#text_message2(type='text')
+            input#btn_send2(type='button', value='Send')
+        .col-4
+          input#room_name(type='text')
+          input#new_room(type='button' value='new_room')
+        .col-4
+          #info
+            label Room
+            #room
+            label Current Room
+            #current_room
+
+    
