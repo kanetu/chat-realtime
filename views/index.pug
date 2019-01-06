@@ -1,35 +1,62 @@
 extends layout
 
 block content
-    #info
-      label Name
-      input#name_person(type='text')
-      input#register(type='button' value='register')
-    .container
+    .container#main
       .row
-        .col-8#main_page
-          #content
-          #controls
-            input#text_message(type='text')
-            input#btn_send(type='button', value='Send')
-        .col-4
-          #info
-            label Current User
-            #current_user
-      .row
-        .col-4
-          #content2
-          #controls
-            input#text_message2(type='text')
-            input#btn_send2(type='button', value='Send')
-        .col-4
-          input#room_name(type='text')
-          input#new_room(type='button' value='new_room')
-        .col-4
-          #info
-            label Room
-            #room
-            label Current Room
-            #current_room
+        .col-9
+          #main-message
+            
+        .col-3
+          .list-user
+            h5.title-list-user-content Member
+            ul.list-user-content.tab#current-user
+            h5.title-list-user-content Room
+              #create-room-btn(data-toggle='modal', data-target='#create-room-modal') 
+               i.fas.fa-plus(style='font-size:16px')
 
-    
+            ul.list-user-content.tab#room  
+            h5.title-list-user-content Room Joined
+            ul.list-user-content.tab#current-room
+              
+    // Modal
+    #create-room-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true')
+     .modal-dialog.modal-dialog-centered(role='document')
+      .modal-content
+       .modal-header
+        h5#exampleModalLongTitle.modal-title Tạo Phòng
+        button.close(type='button', data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') ×
+       .modal-body
+        .form-group
+          label.col-form-label(for='room-name') Tên phòng:
+          input#room-name.form-control(type='text', required)
+        .container
+          .row.mb-15
+            .col-4 Loại phòng:
+            .col-4.form-check
+              label.form-check-label
+                input.form-check-input(type='radio', name='status', id='rd-public' checked)
+                | Phòng chung
+            .col-4.form-check
+              label.form-check-label
+                input.form-check-input(type='radio', name='status')
+                | Phòng riêng tư
+          label#lb-error-create-room
+        .modal-footer
+          button.btn.btn-secondary(type='button', data-dismiss='modal') Hủy
+          button.btn.btn-primary(type='button', id='create-room') Tạo
+
+    // Modal
+    #create-nickname-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true',data-keyboard="false",data-backdrop="static")
+     .modal-dialog.modal-dialog-centered(role='document')
+      .modal-content
+       .modal-header
+        h5#exampleModalLongTitle.modal-title Nhập Nickname
+       .modal-body
+        .form-group
+          label.col-form-label(for='room-name') Tên phòng:
+          input#nickname.form-control(type='text', required)
+        
+          label#lb-error-create-nickname
+        .modal-footer
+          button.btn.btn-primary(type='button', id='create-nickname', disabled) Tạo

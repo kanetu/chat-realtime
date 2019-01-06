@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('../app').app;
 var debug = require('debug')('chat-realtime:server');
 var http = require('http');
 
@@ -19,9 +19,9 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
-var io = require('socket.io')(server);
-require('../sockets/base')(io);
+var server = require('../app').server;
+// var io = require('socket.io')(server);
+// require('../sockets/base')(io);
 /**
  * Listen on provided port, on all network interfaces.
  */
