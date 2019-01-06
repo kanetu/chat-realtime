@@ -3,10 +3,10 @@ extends layout
 block content
     .container#main
       .row
-        .col-9
+        .col-md-9.col-xs-12
           #main-message
             
-        .col-3
+        .col-md-3.col-xs-12
           .list-user
             h5.title-list-user-content Member
             ul.list-user-content.tab#current-user
@@ -45,18 +45,25 @@ block content
         .modal-footer
           button.btn.btn-secondary(type='button', data-dismiss='modal') Hủy
           button.btn.btn-primary(type='button', id='create-room') Tạo
+    
 
-    // Modal
-    #create-nickname-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true',data-keyboard="false",data-backdrop="static")
-     .modal-dialog.modal-dialog-centered(role='document')
+    //Modal Create nickname
+    #create-nickname-modal.modal.fade.show(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', style='display: block; padding-right: 17px;',data-keyboard="false",data-backdrop="static")
+     .modal-dialog.cascading-modal.modal-avatar.modal-sm(role='document')
+     
       .modal-content
+       // Header
        .modal-header
-        h5#exampleModalLongTitle.modal-title Nhập Nickname
-       .modal-body
-        .form-group
-          label.col-form-label(for='room-name') Tên phòng:
-          input#nickname.form-control(type='text', required)
-        
-          label#lb-error-create-nickname
-        .modal-footer
-          button.btn.btn-primary(type='button', id='create-nickname', disabled) Tạo
+        img.rounded-circle.img-responsive(src='https://mdbootstrap.com/img/Photos/Avatars/img%20%281%29.jpg', alt='Avatar photo')
+       // Body
+       .modal-body.text-center.mb-1
+        h5.mt-1.mb-2 Nickname
+        .md-form.ml-0.mr-0
+          input#nickname.form-control.ml-0(type='text')
+          label.ml-0(for='nickname', id="lb-error-create-nickname") Nhập Nickname của bạn
+        .text-center.mt-4
+          button.btn.btn-cyan.waves-effect.waves-light(id='create-nickname',disabled)
+            | Tạo
+            i.fas.fa-sign-in.ml-1
+
+   

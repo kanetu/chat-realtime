@@ -7,7 +7,7 @@ html(lang='en')
     link(rel='stylesheet', href='https://use.fontawesome.com/releases/v5.6.3/css/all.css')
     // Material Design Bootstrap
     link(href='https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.6.0/css/mdb.min.css', rel='stylesheet')
-
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
     style.
       body{
       background: url('/images/background-chat.jpg');
@@ -19,6 +19,27 @@ html(lang='en')
       width: 100%;
       background: lightgray;
       height: 350px;
+      }
+      .title-room{
+      font-size: 1.75rem;
+      background: rgba(148, 148, 149, 0.4);
+      color: #fff;
+      }
+      .slash{
+      font-weight: bold;
+      }
+      .toolbar{
+      position:absolute;
+      top: 0;
+      right: 0;
+      }
+      .toolbar i{
+      margin-right: 10px;
+      transition: all .75s ease;
+      }
+      .toolbar i:hover{
+      transform: scale(1.35);
+
       }
       #text-message{
       width: 90%;
@@ -85,19 +106,20 @@ html(lang='en')
       }
       .controls{
       position: relative;
-      padding: 20px;
+      padding: 20px 0px;
       }
       .input-text-message{
-      width: 80%;
+      width: 100%;
       border: none;
       display: inline;
       }
       .btn-send-message{
-      border-radius: 20px;
+      border-radius: 5px;
       height: 37px;
-      width: 10%;
+      width: 100%;
+      color: #3A70B8;
+      font-weight: bold;
       border: none;
-      margin-left: 10px;
       background:rgba(255, 255, 255, 0.4);
       transition: .25s ease all;
       cursor: pointer;

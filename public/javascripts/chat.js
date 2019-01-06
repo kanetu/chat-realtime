@@ -69,29 +69,38 @@ socket.on('server-send-room-current', function(data){
             <i class="fas fa-home"></i> ${data.nameRoom} <span class="badge badge-success" id="user-stage-2-in-${roomid}">1</span></li>`);
         
 
-        let headRoom = `<div id="${roomid}" class="tabcontent" style="display:none" id="">
-            <div class="row info-room">
-            <div class="col-7">${data.nameRoom}</div>
+        let headRoom = `<div id="${roomid}" class="tabcontent" style="display:none">
+                <div class="row info-room">
+                <div class="col-12 title-room">
+                    <lable class='slash'>#</lable>
+                    ${data.nameRoom}
             `;
         let bodyRoom = `
             </div>
             <div class="messages" id="messages-${roomid}">
             </div>
-            <div class="controls">
-            <input type="" class="form-control input-text-message" id="message-${roomid}">
-            <button type="text" class="btn-send-message" id="btn-${roomid}"><i class="fas fa-paper-plane"></i></button>
+            <div class="controls ">
+            <div class="row">
+                <div class="offset-1 col-7 offset-md-1 col-md-8 ">
+                <input type="" class="form-control input-text-message " id="message-${roomid}">
+                </div>
+                <div class="col-3 col-md-2 ">
+                <button type="text" class="btn-send-message" id="btn-${roomid}">SEND</button>
+                </div>
+            </div>
             </div>
             </div>
         `;
         let toolbar = `
-                <div class="col-5">
-                <button class="btn btn-default" id="btn-invite-${roomid}" data-toggle="modal" data-target="#md-invite-${roomid}"> <i class="far fa-address-book" style="font-size:20px"></i> Mời bạn</button>
-                <button class="btn btn-default" id="btn-out-${roomid}"> <i class="fas fa-sign-out-alt" style="font-size:20px"></i> </button> 
+                <div class="toolbar">
+                <i class="far fa-address-book"  id="btn-invite-${roomid}" data-toggle="modal" data-target="#md-invite-${roomid}"></i> 
+                <i class="fas fa-sign-out-alt" id="btn-out-${roomid}"></i>
+                </div>
                 </div>
             `;
 
         if(roomid === 'room-chat-chung'){
-            toolbar = '';
+            toolbar = `</div>`;
         }
 
         $('#main-message').append(headRoom + toolbar + bodyRoom);
