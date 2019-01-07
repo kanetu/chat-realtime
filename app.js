@@ -9,9 +9,8 @@ var logger = require('morgan');
 //var socket = require('socket.io');
 
 var indexRouter = require('./routes/index');
-var authRouter = require('./routes/auth');
-//Middle ware
-var authMiddleware = require('./middlewares/auth.middleware');
+
+
 
 var app = express();
 var server = require('http').createServer(app);
