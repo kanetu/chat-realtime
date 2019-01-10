@@ -1,34 +1,8 @@
 var messages = [];
 var rooms = [];
-var socket = io.connect('https://kane-chat-realtime.herokuapp.com/');
-
-var nickname = "";
+var socket = io.connect('http://kane-chat-realtime.herokuapp.com/');
 
 
-
-socket.on('message', function (socket) {
-
-    if(messages['mainroom'] === undefined)
-        messages['mainroom'] = [];
-    console.log(socket);
-    if(socket.flag !== undefined){
-        if(socket.message) {
-            messages['mainroom'].push(socket.username+": "+socket.message);
-            var html1 = '';
-            for(var i=0; i<messages['mainroom'].length; i++) {
-                html1 += messages['mainroom'][i] + '<br />';
-            }
-            $("#mainroom").html(html1);
-        } else {
-            console.log("There is a problem:", socket);
-        }
-    }
-    
-});
-
-socket.on('server-send-client-erorr-username', function(){
-    alert('Username đã tồn tại');
-});
 socket.on('server-send-client-error-invite', function(){
     alert('Không thể mời! Không tồn tại username này!');
 
@@ -70,34 +44,34 @@ socket.on('server-send-room-current', function(data){
         
 
         let headRoom = `<div id="${roomid}" class="tabcontent" style="display:none">
-                <div class="row info-room">
-                <div class="col-12 title-room">
-                    <lable class='slash'>#</lable>
-                    ${data.nameRoom}
-            `;
+        <div class="row info-room">
+        <div class="col-12 title-room">
+        <lable class='slash'>#</lable>
+        ${data.nameRoom}
+        `;
         let bodyRoom = `
-            </div>
-            <div class="messages" id="messages-${roomid}">
-            </div>
-            <div class="controls ">
-            <div class="row">
-                <div class="offset-1 col-7 offset-md-1 col-md-8 ">
-                <input type="" class="form-control input-text-message " id="message-${roomid}">
-                </div>
-                <div class="col-3 col-md-2 ">
-                <button type="text" class="btn-send-message" id="btn-${roomid}">SEND</button>
-                </div>
-            </div>
-            </div>
-            </div>
+        </div>
+        <div class="messages" id="messages-${roomid}">
+        </div>
+        <div class="controls ">
+        <div class="row">
+        <div class="offset-1 col-7 offset-md-1 col-md-8 ">
+        <input type="" class="form-control input-text-message " id="message-${roomid}">
+        </div>
+        <div class="col-3 col-md-2 ">
+        <button type="text" class="btn-send-message" id="btn-${roomid}">SEND</button>
+        </div>
+        </div>
+        </div>
+        </div>
         `;
         let toolbar = `
-                <div class="toolbar">
-                <i class="far fa-address-book"  id="btn-invite-${roomid}" data-toggle="modal" data-target="#md-invite-${roomid}"></i> 
-                <i class="fas fa-sign-out-alt" id="btn-out-${roomid}"></i>
-                </div>
-                </div>
-            `;
+        <div class="toolbar">
+        <i class="far fa-address-book"  id="btn-invite-${roomid}" data-toggle="modal" data-target="#md-invite-${roomid}"></i> 
+        <i class="fas fa-sign-out-alt" id="btn-out-${roomid}"></i>
+        </div>
+        </div>
+        `;
 
         if(roomid === 'room-chat-chung'){
             toolbar = `</div>`;
@@ -138,7 +112,7 @@ socket.on('server-send-room-current', function(data){
         $('#btn-'+roomid).on('click', function() {
             let message = $('#message-'+roomid).val();
 
-            socket.emit('client-send-message-room', {message, room: data.nameRoom, time: getTime()});
+            socket.emit('client-send-message-room', {message, room: data.nameRoom});
             $('#message-'+roomid).val('');
         });
         
@@ -147,7 +121,7 @@ socket.on('server-send-room-current', function(data){
             var keycode = (event.keyCode ? event.keyCode : event.which);
             if (keycode == '13') {
                 let message = $('#message-'+roomid).val();
-                socket.emit('client-send-message-room', {message, room:data.nameRoom, time: getTime()});
+                socket.emit('client-send-message-room', {message, room:data.nameRoom});
                 $(this).val('');
             }
         });
@@ -199,7 +173,7 @@ socket.on('server-send-list-user-has-not-joined', function(data){
 
     var hasnotJoined = data.allUser.filter(function(e) {
       return data.hasJoined.indexOf(e) == -1;
-  });
+    });
 
     let html = "";
     
@@ -210,28 +184,23 @@ socket.on('server-send-list-user-has-not-joined', function(data){
     $(`#list-user-has-not-joined-${shortNameRoom}`).html(html);
     console.log(data.room);
 });
+
 socket.on('server-send-out-room-sucess', function(data){
     shortNameRoom = data.room.toLowerCase().split(" ").join('-');
     $(`#${shortNameRoom}`).remove();
     $(`#lb-${shortNameRoom}`).remove();
     document.getElementById('lb-room-chat-chung').click();
 });
-window.onclose = function(){
-    socket.disconnect();
-}
 
-$(window).on('load',function(){
-    $('#create-nickname-modal').modal('show');
-});
 
 socket.on('server-send-client-nickname-available-or-not', function(data){
     if(data.answer){
-     $('#lb-error-create-nickname').html("Nick name này có thể sử dụng");
-     $('#create-nickname').removeAttr('disabled');
- }else{
-     $('#lb-error-create-nickname').html("Nick name này không thể sử dụng");
-     $('#create-nickname').attr("disabled","disabled");
- }
+       $('#lb-error-create-nickname').html("Nick name này có thể sử dụng");
+       $('#create-nickname').removeAttr('disabled');
+   }else{
+       $('#lb-error-create-nickname').html("Nick name này không thể sử dụng");
+       $('#create-nickname').attr("disabled","disabled");
+   }
 });
 $('#nickname').on('input', function() { 
     // get the current value of the input field.
@@ -254,6 +223,13 @@ $('#create-room').on('click', function(){
     }
 });
 
+window.onclose = function(){
+    socket.disconnect();
+}
+
+$(window).on('load',function(){
+    $('#create-nickname-modal').modal('show');
+});
 
 function openCity(evt, cityName) {
   var i, tabcontent, tablinks;
@@ -277,14 +253,3 @@ function inviteFriend(name, room){
     socket.emit('client-invite-client-to-room', {nickname: name, room});
 }
 
-function getTime() {
-    let date = new Date();
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0'+minutes : minutes;
-    var strTime = hours + ':' + minutes + ' ' + ampm;
-    return strTime;
-}

@@ -1,8 +1,6 @@
 
 module.exports = function(io){
 
-	var username_list = [];
-
 	var users = [];
 
 	function getUsers(){
@@ -14,7 +12,17 @@ module.exports = function(io){
 		}
 		return arr_user;
 	}
-
+	function getTime() {
+	    let date = new Date();
+	    var hours = date.getHours();
+	    var minutes = date.getMinutes();
+	    var ampm = hours >= 12 ? 'PM' : 'AM';
+	    hours = hours % 12;
+	    hours = hours ? hours : 12; // the hour '0' should be '12'
+	    minutes = minutes < 10 ? '0'+minutes : minutes;
+	    var strTime = hours + ':' + minutes + ' ' + ampm;
+	    return strTime;
+	}
 	function findRooms() {
 		var availableRooms = [];
 		var rooms = io.sockets.adapter.rooms;
@@ -68,7 +76,7 @@ module.exports = function(io){
 
 		socket.on('client-send-message-room', function (data) {
 			console.log(data);
-			io.to(data.room).emit('server-send-message-user-in-room',{username: socket.nickname, message: data.message, room: data.room, time: data.time});
+			io.to(data.room).emit('server-send-message-user-in-room',{username: socket.nickname, message: data.message, room: data.room, time: getTime()});
 		});
 		socket.on('client-send-username', function(data){
 			if(getUsers().indexOf(data.username)>=0){
