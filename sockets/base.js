@@ -13,9 +13,21 @@ module.exports = function(io){
 		return arr_user;
 	}
 	function getTime() {
+
 	    let date = new Date();
-	    var hours = date.getHours();
-	    var minutes = date.getMinutes();
+	    let offset = '+7';
+	    // convert to msec
+	    // add local time zone offset 
+	    // get UTC time in msec
+	    utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+	    
+	    // create new Date object for different city
+	    // using supplied offset
+	    nd = new Date(utc + (3600000*offset));
+
+
+	    var hours = nd.getHours();
+	    var minutes = nd.getMinutes();
 	    var ampm = hours >= 12 ? 'PM' : 'AM';
 	    hours = hours % 12;
 	    hours = hours ? hours : 12; // the hour '0' should be '12'
