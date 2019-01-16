@@ -1,12 +1,18 @@
+//Chứa những tin nhắn trong các phòng sau khi tham gia
 var messages = [];
+
+//Da
 var rooms = [];
-var socket = io.connect('http://kane-chat-realtime.herokuapp.com/');
+var socket = io.connect('http://localhost:3000');
 
 
+//Client chờ sự kiện server thông báo lỗi mời bạn
 socket.on('server-send-client-error-invite', function(){
     alert('Không thể mời! Không tồn tại username này!');
 
-})
+});
+
+//Client chờ sự kiện server gửi danh sách user đang trực tuyến
 socket.on('server-send-client-list-user', function(list){
     let html = '';
     for(var i=0; i<list.length; i++) {
@@ -15,6 +21,7 @@ socket.on('server-send-client-list-user', function(list){
     $('#current-user').html(html);
 });
 
+//Client chờ sự kiện server gửi danh sách phòng
 socket.on('server-send-list-rooms', function(list){
     $('#room').html('');
     list.map(function(r){
@@ -26,6 +33,7 @@ socket.on('server-send-list-rooms', function(list){
     
 });
 
+//Client chờ sự kiện server cập nhật số lượng client/user trong các phòng
 socket.on('server-send-user-in-room', function(data){
     let roomid = data.nameRoom;
     roomid = roomid.toLowerCase().split(' ').join('-');
@@ -34,12 +42,13 @@ socket.on('server-send-user-in-room', function(data){
     $(`#user-stage-2-in-${roomid}`).html(data.countUser);
 });
 
+//Client chờ sự kiện server gửi phòng trò chuyện hiện tại sau khi tham gia phòng
 socket.on('server-send-room-current', function(data){
     let roomid = data.nameRoom;
     roomid = roomid.toLowerCase().split(" ").join('-');
 
     if(document.getElementById(`lb-${roomid}`) === null){
-        $('#current-room').append(`<li class="tablinks" id="lb-${roomid}" onclick="openCity(event, \'${roomid}\')" >
+        $('#current-room').append(`<li class="tablinks" id="lb-${roomid}" onclick="openRoom(event, \'${roomid}\')" >
             <i class="fas fa-home"></i> ${data.nameRoom} <span class="badge badge-success" id="user-stage-2-in-${roomid}">1</span></li>`);
         
 
@@ -139,9 +148,8 @@ socket.on('server-send-room-current', function(data){
     }
 });
 
-
+//Client chờ sự kiện server gửi tin nhắn 
 socket.on('server-send-message-user-in-room', function(socket){
-    console.log(socket);
     if(messages[socket.room] === undefined)
         messages[socket.room] = [];
     if(socket.message) {
@@ -169,6 +177,7 @@ socket.on('server-send-message-user-in-room', function(socket){
     }
 });
 
+//Client chờ sự kiện server gửi danh sách user chưa tham gia phòng chỉ định
 socket.on('server-send-list-user-has-not-joined', function(data){
 
     var hasnotJoined = data.allUser.filter(function(e) {
@@ -185,6 +194,7 @@ socket.on('server-send-list-user-has-not-joined', function(data){
     console.log(data.room);
 });
 
+//Client chờ sự kiện server thông báo thoát khỏi phòng thành công
 socket.on('server-send-out-room-sucess', function(data){
     shortNameRoom = data.room.toLowerCase().split(" ").join('-');
     $(`#${shortNameRoom}`).remove();
@@ -193,6 +203,7 @@ socket.on('server-send-out-room-sucess', function(data){
 });
 
 
+//Client chờ sự kiện server kiểm tra nickname có thể sử dụng hay không
 socket.on('server-send-client-nickname-available-or-not', function(data){
     if(data.answer){
        $('#lb-error-create-nickname').html("Nick name này có thể sử dụng");
@@ -202,17 +213,21 @@ socket.on('server-send-client-nickname-available-or-not', function(data){
        $('#create-nickname').attr("disabled","disabled");
    }
 });
+
+//Bắt sự kiện client gõ vào input nickname sẽ tự động gửi đến server kiểm tra
 $('#nickname').on('input', function() { 
     // get the current value of the input field.
     socket.emit('check-nickname', $(this).val());
 });
 
+//Bắt sự kiện client nhấn nút tạo nickname
 $("#create-nickname").on("click", function(){
     socket.username = $('#nickname').val();
     socket.emit('client-send-username',{username: socket.username});
     $('#create-nickname-modal').modal('hide');
 });
 
+//Bắt sự kiện client nhấn nút tạo phòng
 $('#create-room').on('click', function(){
     let typeRoom = document.getElementById('rd-public').checked? 'public':'private';
     if($('#room-name').val() === ''){
@@ -223,15 +238,18 @@ $('#create-room').on('click', function(){
     }
 });
 
+//Bắt sự kiện khi user đóng trình duyệt
 window.onclose = function(){
     socket.disconnect();
 }
 
-$(window).on('load',function(){
+//Bắt sự kiện khi user tải trang
+window.onload = function(){
     $('#create-nickname-modal').modal('show');
-});
+};
 
-function openCity(evt, cityName) {
+//Hàm mở tab phòng trò chuyện
+function openRoom(evt, cityName) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
   for (i = 0; i < tabcontent.length; i++) {
@@ -245,10 +263,12 @@ function openCity(evt, cityName) {
   evt.currentTarget.className += " active";
 }
 
+//Hàm dùng để tham gia phòng chỉ dịnh
 function joinRoom(room){
     socket.emit('client-join-room', {nameRoom: room});
 }
 
+//Hàm dùng để mời bạn vào phòng chỉ định
 function inviteFriend(name, room){
     socket.emit('client-invite-client-to-room', {nickname: name, room});
 }
